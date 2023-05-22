@@ -1,0 +1,32 @@
+{
+  "name": "akaneko",
+  "version": "5.2.2",
+  "description": "An Anime/Hentai Image API which simplifies how you fetch random images for you! Reliable, and very pleasure friendly!",
+  "main": "fubuki.js",
+  "types": "./typings/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "\u0016https://gitlab.com/weeb-squad/akaneko"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  },
+  "keywords": [
+    "nsfw",
+    "hentai",
+    "anime",
+    "images",
+    "wallpaper",
+    "discord",
+    "neko",
+    "cute",
+    "as",
+    "fubuki",
+    "api"
+  ],
+  "author": "ryumin",
+  "license": "MIT"
+}

@@ -1,0 +1,11 @@
+{"error":".zip archives do not support non-regular files","level":"error","msg":"unable to write file node_modules/.bin/detect-libc","time":"2022-08-26T11:25:21Z"}
+{"error":".zip archives do not support non-regular files","level":"error","msg":"unable to write file node_modules/.bin/google-it","time":"2022-08-26T11:25:21Z"}
+{"error":".zip archives do not support non-regular files","level":"error","msg":"unable to write file node_modules/.bin/mkdirp","time":"2022-08-26T11:25:21Z"}
+{"error":".zip archives do not support non-regular files","level":"error","msg":"unable to write file node_modules/.bin/prebuild-install","time":"2022-08-26T11:25:21Z"}
+{"error":".zip archives do not support non-regular files","level":"error","msg":"unable to write file node_modules/.bin/rc","time":"2022-08-26T11:25:21Z"}
+{"error":".zip archives do not support non-regular files","level":"error","msg":"unable to write file node_modules/.bin/semver","time":"2022-08-26T11:25:21Z"}
+{"error":".zip archives do not support non-regular files","level":"error","msg":"unable to write file node_modules/.bin/sshpk-conv","time":"2022-08-26T11:25:21Z"}
+{"error":".zip archives do not support non-regular files","level":"error","msg":"unable to write file node_modules/.bin/sshpk-sign","time":"2022-08-26T11:25:21Z"}
+{"error":".zip archives do not support non-regular files","level":"error","msg":"unable to write file node_modules/.bin/sshpk-verify","time":"2022-08-26T11:25:21Z"}
+{"error":".zip archives do not support non-regular files","level":"error","msg":"unable to write file node_modules/configstore/node_modules/.bin/mkdirp","time":"2022-08-26T11:25:31Z"}
+{"error":".zip archives do not support non-regular files","level":"error","msg":"unable to write file node_modules/request/node_modules/.bin/uuid","time":"2022-08-26T11:26:53Z"}

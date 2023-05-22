@@ -1,0 +1,19 @@
+{
+  "name": "discord-reply",
+  "version": "0.1.2",
+  "description": "An discord.js extension to inline reply messages",
+  "main": "index.js",
+  "keywords": [
+    "discord.js",
+    "reply",
+    "messagereply",
+    "discordmessagereply",
+    "src",
+    "angeloii"
+  ],
+  "author": "Angelo II#0007",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "discord.js": "^12.5.1"
+  }
+}
