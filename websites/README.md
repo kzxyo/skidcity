@@ -1,4 +1,3 @@
-# crime website
+# skidded websites
 
-Website made by lanyard#0001 and uzi (pretend#0001)
-**leaked by me(meant#0001)**
+all leaked by me
