@@ -1,0 +1,71 @@
+main.svelte-1ase86p.svelte-1ase86p {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100dvh;
+    text-align: center
+}
+
+main.svelte-1ase86p h1.svelte-1ase86p {
+    font-size: 3rem;
+    margin: 0
+}
+
+main.svelte-1ase86p p.svelte-1ase86p {
+    font-size: 1.5rem;
+    margin: 0
+}
+
+main.svelte-1ase86p .buttons.svelte-1ase86p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem
+}
+
+main.svelte-1ase86p .buttons a.svelte-1ase86p {
+    text-decoration: none;
+    color: inherit;
+    margin: .5rem;
+    transition: all .15s ease-in-out
+}
+
+main.svelte-1ase86p .buttons a.svelte-1ase86p:hover {
+    text-decoration: underline;
+    text-shadow: 0 0 .5rem #fff
+}
+
+.footer.svelte-1ase86p.svelte-1ase86p {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    text-align: center
+}
+
+.footer.svelte-1ase86p p.svelte-1ase86p {
+    font-size: 1rem;
+    margin: 0
+}
+
+.footer.svelte-1ase86p p a.svelte-1ase86p {
+    color: inherit;
+    text-decoration: underline;
+    transition: all .15s ease-in-out
+}
+
+.footer.svelte-1ase86p p a.svelte-1ase86p:hover {
+    text-shadow: 0 0 .5rem #fff
+}
+
+@media (max-width: 600px) {
+    main.svelte-1ase86p h1.svelte-1ase86p {
+        font-size:2rem
+    }
+
+    main.svelte-1ase86p p.svelte-1ase86p {
+        font-size: 1.25rem
+    }
+}
