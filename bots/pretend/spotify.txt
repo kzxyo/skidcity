@@ -1,0 +1,334 @@
+clientid = "f567fb50e0b94b4e8224d2960a00e3ce"
+clientsecret = "f4294b7b837940f996b3a4dcf5230628"
+await cursor.execute("CREATE TABLE IF NOT EXISTS spotify (user_id INTEGER, access_token TEXT)")
+
+class SpotifyModal(Modal, title="Submit your code"): 
+  code = TextInput(label="code", placeholder="the code you have received", max_length=200) 
+
+  async def on_submit(self, interaction: Interaction):
+   async def user_get(access_token): 
+        data = {
+          'grant_type': 'refresh_token',
+          'refresh_token': access_token,
+          "client_secret": clientsecret,
+          "client_id": clientid
+        }
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        async with aiohttp.ClientSession(headers=headers) as cs:
+          async with cs.post("https://accounts.spotify.com/api/token", params=data) as r: 
+            if r.status != 200: 
+              print(await r.json())
+              print(r.status)
+              return None 
+            return (await r.json())["access_token"]  
+   async with interaction.client.db.cursor() as cursor: 
+      await cursor.execute("SELECT access_token FROM spotify WHERE user_id = {}".format(interaction.user.id))
+      check = await cursor.fetchone()
+      if check is not None: 
+        user = await user_get(check[0])
+        if user is None: return await interaction.response.send_message(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {interaction.user.mention}: You are already logged in"), ephemeral=True)      
+        await cursor.execute("DELETE FROM spotify WHERE user_id = {}".format(interaction.user.id))
+        await interaction.client.db.commit()
+      verify = await user_get(self.code.value)
+      if verify is None: return await interaction.response.send_message(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {interaction.user.mention}: Unable to **authentificate** you to **spotify**"), ephemeral=True)  
+      await cursor.execute("INSERT INTO spotify VALUES (?,?)", (interaction.user.id, self.code.value))
+      await interaction.client.db.commit()
+      user = await user_get(self.code.value)
+      return await interaction.response.edit_message(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {interaction.user.mention}: Succesfully logged in"), view=None)      
+
+  async def on_error(self, interaction: Interaction, error: Exception) -> None:
+    await interaction.response.send_message(embed=Embed(color=SpotifyUtils.color, description='{} {}: Oops! Something went wrong.'.format(SpotifyUtils.emoji, interaction.user.mention)), ephemeral=True)
+    traceback.print_exception(type(error), error, error.__traceback__)
+
+class SpotifyUtils: 
+  
+  color = 0x50C878
+  emoji = "<:spotify:1022181543202017380>"
+
+  async def get_key(ctx: Context, member: Member): 
+    async with ctx.bot.db.cursor() as cursor: 
+      await cursor.execute("SELECT access_token FROM spotify WHERE user_id = ?", (member.id,))
+      check = await cursor.fetchone()
+      if check is None: return None
+      if check is not None: 
+        data = {
+          'grant_type': 'refresh_token',
+          'refresh_token': check[0],
+          "client_secret": clientsecret,
+          "client_id": clientid
+        }
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        async with aiohttp.ClientSession(headers=headers) as cs:
+          async with cs.post("https://accounts.spotify.com/api/token", params=data) as r: 
+            if r.status != 200: 
+              print(await r.json())
+              print(r.status)
+              return None 
+            return (await r.json())["access_token"]  
+      return None
+
+  async def get_user(ctx: Context, member: Member): 
+    access_token = await SpotifyUtils.get_key(ctx, member)
+    if access_token is None: return None
+    async with aiohttp.ClientSession(headers={"Authorization": "Bearer {}".format(str(access_token))}) as cs: 
+      async with cs.get("https://api.spotify.com/v1/me") as r: 
+        if r.status != 200: return None
+        return await r.json()
+  
+  async def get_song(ctx: Context, member: Member, state: str): 
+    access_token = await SpotifyUtils.get_key(ctx, member)
+    if access_token is None: 
+      await ctx.message.add_reaction("❌")
+      return await ctx.reply(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: Unable to get the song"), mention_author=False) 
+    async with aiohttp.ClientSession(headers={"Authorization": "Bearer {}".format(str(access_token))}) as cs: 
+      async with cs.get("https://api.spotify.com/v1/me/player/currently-playing") as r: 
+       if r.status == 204: 
+        await ctx.message.add_reaction("❌")
+        return await ctx.reply(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: You are not listening to **Spotify**"), mention_author=False) 
+       elif r.status in range(399, 430): 
+         await ctx.message.add_reaction("❌")
+         return await ctx.reply(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: Unable to do any action on your account. Please authentificate if you didn't already"), mention_author=False) 
+       elif r.status == 200: 
+        await ctx.message.add_reaction("✅")
+        data = await r.json()
+        artist = data["item"]["album"]["artists"][0]
+        artisturl = artist["external_urls"]["spotify"]
+        artistname = artist["name"]
+        trackname = data["item"]["name"]
+        trackurl = data["item"]["external_urls"]["spotify"]   
+        return await ctx.reply(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: {state} [**{trackname}**]({trackurl}) by [**{artistname}**]({artisturl})"), mention_author=False)
+  
+  async def check_login(ctx: Context, member: Member): 
+    if await SpotifyUtils.get_user(ctx, member) is None: 
+      async with ctx.bot.db.cursor() as cursor: 
+        try:
+         await cursor.execute("DELETE FROM spotify WHERE user_id = ?", (member.id,))
+         await ctx.bot.db.commit()
+        except: pass 
+        await ctx.invoke(ctx.bot.get_command('spotify login'))
+        return False 
+    return True    
+
+@group(invoke_without_command=True, aliases=["sp"])
+    @cooldown(1, 4, BucketType.user)
+    @blacklist()
+    async def spotify(self, ctx: Context): 
+      embed1 = Embed(color=Colors.default, title="spotify nowplaying", description="show what an user is listening on spotify")
+      embed1.set_author(name=self.bot.user.name, icon_url=self.bot.user.display_avatar)
+      embed1.add_field(name="usage", value="```spotify nowplaying <user>```", inline=False)
+      embed1.set_footer(text="aliases: np ・ 1/11")
+
+      embed2 = Embed(color=Colors.default, title="spotify lyrics", description="check lyrics of the song you are listening to right now")
+      embed2.set_author(name=self.bot.user.name, icon_url=self.bot.user.display_avatar)
+      embed2.add_field(name="usage", value="```spotify lyrics <user>```", inline=False)
+      embed2.set_footer(text="aliases: none ・ 2/11") 
+
+      embed3 = Embed(color=Colors.default, title="spotify login", description="link your spotify account to the bot")
+      embed3.set_author(name=self.bot.user.name, icon_url=self.bot.user.display_avatar)
+      embed3.add_field(name="usage", value="```spotify login```", inline=False)
+      embed3.set_footer(text="aliases: none ・ 3/11")
+
+      embed4 = Embed(color=Colors.default, title="spotify logout", description="unlink your spotify account from the bot")
+      embed4.set_author(name=self.bot.user.name, icon_url=self.bot.user.display_avatar) 
+      embed4.add_field(name="usage", value="```spotify logout```", inline=False)
+      embed4.set_footer(text="aliases: none ・ 4/11") 
+
+      embed5 = Embed(color=Colors.default, title="spotify skip", description="skip the song")
+      embed5.set_author(name=self.bot.user.name, icon_url=self.bot.user.display_avatar)
+      embed5.add_field(name="usage", value="```spotify skip```", inline=False)
+      embed5.set_footer(text="aliases: s, next ・ 5/11")
+
+      embed6 = Embed(color=Colors.default, title="spotify previous", description="go to the previous song")
+      embed6.set_author(name=self.bot.user.name, icon_url=self.bot.user.display_avatar)
+      embed6.add_field(name="usage", value="```spotify previous```", inline=False)
+      embed6.set_footer(text="aliases: prev ・ 6/11")
+
+      embed7 = Embed(color=Colors.default, title="spotify pause", description="pause the song")
+      embed7.set_author(name=self.bot.user.name, icon_url=self.bot.user.display_avatar)
+      embed7.add_field(name="usage", value="```spotify pause```", inline=False)
+      embed7.set_footer(text="aliases: p, stop ・ 7/11")
+      
+      embed11 = Embed(color=Colors.default, title="spotify replay", description="replay the song")
+      embed11.set_author(name=self.bot.user.name, icon_url=self.bot.user.display_avatar)
+      embed11.add_field(name="usage", value="```spotify replay```", inline=False)
+      embed11.set_footer(text="aliases: play ・ 8/11")
+
+      embed8 = Embed(color=Colors.default, title="spotify loop", description="loop the song")
+      embed8.set_author(name=self.bot.user.name, icon_url=self.bot.user.display_avatar)
+      embed8.add_field(name="usage", value="```spotify loop```", inline=False)
+      embed8.set_footer(text="aliases: repeat ・ 9/11")
+      
+      embed9 = Embed(color=Colors.default, title="spotify shuffle", description="shuffle your songs")
+      embed9.set_author(name=self.bot.user.name, icon_url=self.bot.user.display_avatar)
+      embed9.add_field(name="usage", value="```spotify shuffle```", inline=False)
+      embed9.set_footer(text="aliases: none ・ 10/11")
+
+      embed10 = Embed(color=Colors.default, title="spotify volume", description="change the volume of spotify")
+      embed10.set_author(name=self.bot.user.name, icon_url=self.bot.user.display_avatar)
+      embed10.add_field(name="usage", value="```spotify volume [0-100]```", inline=False)
+      embed10.set_footer(text="aliases: none ・ 11/11")
+
+      paginator = pg.Paginator(self.bot, [embed1, embed2, embed3, embed4, embed5, embed6, embed7, embed11, embed8, embed9, embed10], ctx, invoker=ctx.author.id)
+      paginator.add_button('prev', emoji= "<:left:1018156480991612999>")
+      paginator.add_button('next', emoji="<:right:1018156484170883154>")
+      await paginator.start()
+    
+    @spotify.command(help="play the song on repeat", description="utility")
+    @cooldown(1, 4, BucketType.user)
+    @blacklist()
+    async def loop(self, ctx: Context): 
+     verify = await SpotifyUtils.check_login(ctx, ctx.author)
+     if verify is True:       
+      key = await SpotifyUtils.get_key(ctx, ctx.author)
+      async with aiohttp.ClientSession(headers={"Authorization": "Bearer {}".format(key)}) as cs: 
+       async with cs.put("https://api.spotify.com/v1/me/player/repeat?state=track") as r: 
+        if r.status in [429, 401]: return await ctx.reply(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: Unable to do any action on your account. Please authentificate if you didn't already"), mention_author=False) 
+        elif r.status == 204:
+         await ctx.message.add_reaction("🔂")
+         await SpotifyUtils.get_song(ctx, ctx.author, "Looping")
+        else: return await ctx.reply(embed=Embed(color=SpotifyUtils.color, description="{} {}: The song is already on loop".format(SpotifyUtils.emoji, ctx.author.mention)), mention_author=False) 
+
+    @spotify.command(help="pause the song", aliases=["p", "stop"], description="utility")
+    @cooldown(1, 4, BucketType.user)
+    @blacklist()
+    async def pause(self, ctx: Context): 
+     verify = await SpotifyUtils.check_login(ctx, ctx.author)
+     if verify is True:       
+      key = await SpotifyUtils.get_key(ctx, ctx.author)
+      async with aiohttp.ClientSession(headers={"Authorization": "Bearer {}".format(key)}) as cs: 
+       async with cs.put("https://api.spotify.com/v1/me/player/pause") as r: 
+        if r.status in [429, 401]: return await ctx.reply(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: Unable to do any action on your account. Please authentificate if you didn't already"), mention_author=False) 
+        elif r.status == 204:
+         await ctx.message.add_reaction("⏹️")
+         await SpotifyUtils.get_song(ctx, ctx.author, "Paused")
+        else: return await ctx.reply(embed=Embed(color=SpotifyUtils.color, description="{} {}: The song is already paused".format(SpotifyUtils.emoji, ctx.author.mention)), mention_author=False) 
+
+    @spotify.command(help="replay the song", description="utility", aliases=["play"])
+    @cooldown(1, 4, BucketType.user)
+    @blacklist()
+    async def replay(self, ctx: Context):
+      verify = await SpotifyUtils.check_login(ctx, ctx.author)
+      if verify is True:       
+       key = await SpotifyUtils.get_key(ctx, ctx.author)
+       async with aiohttp.ClientSession(headers={"Authorization": "Bearer {}".format(key)}) as cs: 
+        async with cs.put("https://api.spotify.com/v1/me/player/play") as r: 
+         if r.status in [429, 401]: return await ctx.reply(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: Unable to do any action on your account. Please authentificate if you didn't already"), mention_author=False) 
+         elif r.status == 204:
+          await ctx.message.add_reaction("▶️")
+          await SpotifyUtils.get_song(ctx, ctx.author, "Replaying")
+         else: return await ctx.reply(embed=Embed(color=SpotifyUtils.color, description="{} {}: The song is already playing".format(SpotifyUtils.emoji, ctx.author.mention)), mention_author=False) 
+
+    @spotify.command(help="skip the song", aliases=["s", "next"], description="utility")
+    @cooldown(1, 4, BucketType.user)
+    @blacklist()
+    async def skip(self, ctx: Context): 
+     verify = await SpotifyUtils.check_login(ctx, ctx.author)
+     if verify is True:       
+      key = await SpotifyUtils.get_key(ctx, ctx.author)
+      async with aiohttp.ClientSession(headers={"Authorization": "Bearer {}".format(key)}) as cs: 
+       async with cs.post("https://api.spotify.com/v1/me/player/next") as r: 
+        if r.status in [429, 401]: return await ctx.reply(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: Unable to do any action on your account. Please authentificate if you didn't already"), mention_author=False) 
+        elif r.status == 204:
+         await ctx.message.add_reaction("⏩")
+         await SpotifyUtils.get_song(ctx, ctx.author, "Now playing")
+
+    @spotify.command(help="play the previous song", aliases=["prev"], description="utility")
+    @cooldown(1, 4, BucketType.user)
+    @blacklist()
+    async def previous(self, ctx: Context): 
+     verify = await SpotifyUtils.check_login(ctx, ctx.author)
+     if verify is True:
+      key = await SpotifyUtils.get_key(ctx, ctx.author)
+      async with aiohttp.ClientSession(headers={"Authorization": "Bearer {}".format(key)}) as cs: 
+       async with cs.post("https://api.spotify.com/v1/me/player/previous") as r: 
+        if r.status in range(399, 429): return await ctx.reply(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: Unable to do any action on your account. Please authentificate if you didn't already"), mention_author=False) 
+        elif r.status == 204:
+         await ctx.message.add_reaction("⏮️")
+         await asyncio.sleep(1)
+         await SpotifyUtils.get_song(ctx, ctx.author, "Now playing")         
+
+    @spotify.command(help="link your spotify account to the bot", description="utility")
+    @cooldown(1, 4, BucketType.user)
+    @blacklist()
+    async def login(self, ctx: Context): 
+      verify = await SpotifyUtils.get_user(ctx, ctx.author)
+      if verify is not None: return await ctx.reply(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: You are already logged in"), mention_author=False)      
+      embed = Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: Click [**here**](http://api.pretend.space:5000/spotifylogin) to grant **{self.bot.user.name}** access to your **spotify** account. Once you received the code, please click the button below to authentificate yourself")
+      button = Button(label="submit", emoji=SpotifyUtils.emoji)
+      async def button_callback(interaction: Interaction): 
+        if interaction.user != ctx.author: return await interaction.response.send_message(embed=Embed(color=Colors.yellow, description=f"{Emojis.warning} {interaction.user.mention}: You are not the author of this embed"), ephemeral=True)
+        modal = SpotifyModal()
+        await interaction.response.send_modal(modal)
+      button.callback = button_callback 
+
+      view = View()
+      view.add_item(button)
+      await ctx.reply(embed=embed, view=view, mention_author=False)
+    
+    @spotify.command(help="unlink your spotify account from the bot", description="utility")
+    @cooldown(1, 4, BucketType.user)
+    @blacklist()
+    async def logout(self, ctx: Context): 
+      verify = await SpotifyUtils.get_user(ctx, ctx.author)
+      if verify is None: return await ctx.reply(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: You are not logged in"), mention_author=False)       
+      embed = Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: Are you sure you want to **unlink** you **spotify** account?")
+      button1 = Button(emoji=Emojis.check)
+      button2 = Button(emoji=Emojis.wrong)
+      async def button1_callback(interaction: Interaction): 
+        if interaction.user != ctx.author: return await interaction.response.send_message(embed=Embed(color=Colors.yellow, description=f"{Emojis.warning} {interaction.user.mention}: You are not the author of this embed"), ephemeral=True)
+        async with self.bot.db.cursor() as cursor: 
+          await cursor.execute("DELETE FROM spotify WHERE user_id = ?", (interaction.user.id,))
+          await self.bot.db.commit()
+        await interaction.response.edit_message(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {interaction.user.mention}: Unlinked your **spotify** account"), view=None)  
+
+      async def button2_callback(interaction: Interaction): 
+        if interaction.user != ctx.author: return await interaction.response.send_message(embed=Embed(color=Colors.yellow, description=f"{Emojis.warning} {interaction.user.mention}: You are not the author of this embed"), ephemeral=True)
+        await interaction.response.edit_message(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {interaction.user.mention}: Cancelled the logout process.."), view=None)     
+
+      button1.callback = button1_callback
+      button2.callback = button2_callback
+      view = View()
+      view.add_item(button1)
+      view.add_item(button2)
+      await ctx.reply(embed=embed, view=view, mention_author=False)
+
+    @spotify.command(help="check lyrics of the song you are listening to right now", description="utility", usage="<user>")
+    @cooldown(1, 4, BucketType.user)
+    @blacklist()
+    async def lyrics(self, ctx: Context, *, member: Member=None): 
+     async with ctx.channel.typing(): 
+      async def scrape_lyrics(artistname: str, songname: str):
+        artistname2 = str(artistname.replace(' ','-')) if ' ' in artistname else str(artistname)
+        songname2 = str(songname.replace(' ','-')) if ' ' in songname else str(songname)
+        async with aiohttp.ClientSession() as cs:
+         async with cs.get('https://genius.com/'+ artistname2 + '-' + songname2 + '-' + 'lyrics') as r: 
+          html = BeautifulSoup(await r.text(), 'html.parser')
+          try:
+           lyrics = html.find("div", class_="Lyrics__Container-sc-1ynbvzw-6 YYrds")
+           return re.sub(r'([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))', r'\1 \n', lyrics.get_text().replace(']', ']\n\n').replace('[', '\n\n[')) 
+          except: return None
+      if member is None: member = ctx.author
+      if member.activities: 
+        for a in member.activities: 
+         if isinstance(a, Spotify):
+          artist = a.artist.split(",")[0] 
+          song = a.title 
+          if await scrape_lyrics(artist.replace("#", "%23"), song.replace("#", "%23")) is None: return await ctx.reply(embed=Embed(color=0x50C878, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: No lyrics found for **{song}** by **{artist}**"))
+          embed = Embed(color=SpotifyUtils.color, title=f"{song} by {artist}", description=await scrape_lyrics(artist.replace("#", "%23"), song.replace("#", "%23"))).set_footer(text="genius.com")
+          try: return await ctx.reply(embed=embed, mention_author=False)
+          except: return await ctx.reply(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: Unable to find the lyrics for **{song}** by **{artist}**"), mention_author=False)  
+
+      await ctx.reply(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: {f'{member.mention} is' if member != ctx.author else 'You are'} not listening to **Spotify**"), mention_author=False)  
+
+    @spotify.command(help="show what an user is listening on spotify", description="utility", usage="<user>", aliases=["np"])
+    @cooldown(1, 4, BucketType.user)
+    @blacklist()
+    async def nowplaying(self, ctx: Context, *, member: Member=None): 
+      if member is None: member = ctx.author
+      if member.activities: 
+        for a in member.activities: 
+         if isinstance(a, Spotify): 
+          inject = "||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||" 
+          return await ctx.reply(inject + "\n" + a.track_url, mention_author=False)
+
+      await ctx.reply(embed=Embed(color=SpotifyUtils.color, description=f"{SpotifyUtils.emoji} {ctx.author.mention}: {f'{member.mention} is' if member != ctx.author else 'You are'} not listening to **Spotify**"), mention_author=False)      

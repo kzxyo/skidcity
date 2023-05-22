@@ -1,0 +1,23 @@
+from serpapi import GoogleSearch
+import re,apipool
+from apipool import ApiKey, ApiKeyManager
+
+class GoogleSearchApiKey(ApiKey):
+	def __init__(self,key)
+		self.key = key
+
+	apikey_data_list=["d48f6de7f9b90e9cbbbada29b6974c60cfa807866bbdc98e978ff912fd737495","dc0903d7836331ff17d754e9a911f76934bc324d9d1bff4f2215ef81b4db303d","2bc7bcbcebf8f8078c10cd7a8a5d8ced1c33cbdb9f0843bc6612bda46d184d53","68a6e4edc26c5d8898b85d7f9c660ba96951c76ee9129a83fc69aba55b6139a0","807029fe995002454a71205be65cb7a676b8c4e05311609899c3b85501c60792","dd0b9d307c0bc3bcc8591887a9682b2b4d7f48ea4a52c538cc28e491ba77c156","8a631ea8ef86c08d0be2c7cec51e247f6b11cfb867b8057a60cbcd2248881916","cf4632b77e91f79200164758f6bd66f4f9e6ed28a29ad651d2fe984802bfeb2c","7958fc119b95d3335b6fddcfcc4c6ddeee824c5b756d452aa9ce002c11021ce0","52325e766d85f7d92821ca4e3b7a7b5ae1f69fe17bd16504a8c4ad123e32739a",
+	"b45080bc2b1e4f6e6706c37ff7350aac11f96223e6b971f83feeaa532d10e4ae",
+	"a9555833f16381d748a7c08d4224845ab02b6ab1716d36749f7ff2907429d2c0",
+	"9a6c01815f04f8f65ba241bed0ff674cbf602faf7e2b50d0aef6d818089c03d6",
+	"ae59551c82b9aa24b8f666b9adae54deed3381a30190e5019ba94c318d7d0e2e",
+	"b0d49713aa41a82ad31a0b1f697b3f789e8f3227f6a6ba8f4aca260fc1542b08",
+	"d0a80f261d874340e43080954d63f2311da4446fb31dc38af17f6614b644d83a",
+	"46186dbde3c6a401ef6e690e2fead5ba84a39c93fc85f2c5216167a39b234b74"]
+
+
+apikey_list = [
+    GoogleSearchApiKey(**apikey_data)
+    for apikey_data in apikey_data_list
+]
+manager = ApiKeyManager(apikey_list=apikey_list)

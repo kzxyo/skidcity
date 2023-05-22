@@ -1,0 +1,386 @@
+from modules import log
+
+import logging
+logger = logging.getLogger(__name__)
+
+
+
+class Cache:
+	def __init__(self, bot):
+		self.bot = bot
+		self.log_emoji = False
+		self.prefixes = {}
+		self.prefixess = {}
+		self.rolepickers = set()
+		self.votechannels = set()
+		self.googlesafe = {}
+		self.tags = {}
+		self.blacklist = {}
+		self.autoresponses = {}
+		self.autoreacts = {}
+		self.apikeys = []
+		self.chatfilter = {}
+		self.levelupmessage = {}
+		self.global_bl = {}
+		self.antispam = []
+		self.whitelist = {}
+		self.welcomechannels = {}
+		self.exempt = []
+		self.api_ratelimit = {}
+		self.api_audit = {}
+		self.stfu = {}
+		self.vm_locked = []
+		self.adminlock = []
+		self.welcomemessages = {}
+		self.lastfm = {}
+		self.donators = []
+		self.antiraid_trigger = {}
+		self.antiraid_av = []
+		self.antiraid_joins = {}
+		self.antimention = {}
+		self.antiraid_age = {}
+		self.antilink = []
+		self.role_bypass = {}
+		self.autoreact = {}
+		self.autoembed = []
+		self.nodata = []
+		self.api_access_address = []
+		self.booster_roles = {}
+		self.ox_usage = {}
+		self.aliases = {}
+		self.last_seen = {}
+		self.lastfm_embeds = {}
+		self.lastfm_cc = {}
+		self.filter_snipes=[]
+		self.paginator = {}
+		self.donators = []
+		self.antinuke = {}
+		self.whitelist = {}
+		self.image_only = []
+		self.punishment = {}
+		self.delete = []
+		self.antibot = []
+		self.levels = {}
+		self.level_roles = {}
+		self.owners=[]
+		self.support=[]
+		self.threshold = {}
+		self.logging_settings = {}
+		self.autoroles = {}
+		self.afk = {}
+		self.globalban = []
+		self.marriages = set()
+		self.starboard_settings = {}
+		self.starboard_blacklisted_channels = set()
+		self.event_triggers = {
+			"message": 0,
+			"message_delete": 0,
+			"message_edit": 0,
+			"reaction_add": 0,
+			"reaction_remove": 0,
+			"member_join": 0,
+			"member_remove": 0,
+			"guild_join": 0,
+			"guild_remove": 0,
+			"member_ban": 0,
+			"member_unban": 0,
+		}
+		self.stats_notifications_sent = 0
+		self.stats_lastfm_requests = 0
+		self.stats_html_rendered = 0
+		#bot.loop.create_task(self.initialize_settings_cache())
+
+	async def cache_starboard_settings(self):
+		data = await self.bot.db.execute(
+			"""
+			SELECT guild_id, is_enabled, channel_id, reaction_count,
+				emoji_name, emoji_id, emoji_type, log_channel_id
+			FROM starboard_settings
+			"""
+		)
+		if not data:
+			return
+		for (
+			guild_id,
+			is_enabled,
+			channel_id,
+			reaction_count,
+			emoji_name,
+			emoji_id,
+			emoji_type,
+			log_channel_id,
+		) in data:
+			self.starboard_settings[str(guild_id)] = [
+				is_enabled,
+				channel_id,
+				reaction_count,
+				emoji_name,
+				emoji_id,
+				emoji_type,
+				log_channel_id,
+			]
+
+		self.starboard_blacklisted_channels = set(
+			await self.bot.db.execute(
+				"SELECT channel_id FROM starboard_blacklist",
+				as_list=True,
+			)
+		)
+
+	async def cache_logging_settings(self):
+		logging_settings = await self.bot.db.execute(
+			"""
+			SELECT guild_id, member_log_channel_id, ban_log_channel_id, message_log_channel_id
+			FROM logging_settings
+			"""
+		)
+		for (
+			guild_id,
+			member_log_channel_id,
+			ban_log_channel_id,
+			message_log_channel_id,
+		) in logging_settings:
+			self.logging_settings[str(guild_id)] = {
+				"member_log_channel_id": member_log_channel_id,
+				"ban_log_channel_id": ban_log_channel_id,
+				"message_log_channel_id": message_log_channel_id,
+			}
+
+	async def cache_autoroles(self):
+		for guild_id, role_id in await self.bot.db.execute(
+			"SELECT guild_id, role_id FROM autorole"
+		):
+			try:
+				self.autoroles[str(guild_id)].add(role_id)
+			except KeyError:
+				self.autoroles[str(guild_id)] = set([role_id])
+
+	async def cache_donators(self):
+		g=self.bot.get_guild(918445509599977472)
+		dd=await self.bot.db.execute("""SELECT user_id FROM dnrr""", as_list=True)
+		if g:
+			await self.bot.db.execute("""DELETE FROM dnrr""")
+			for m in g.premium_subscribers:
+				if m.id not in self.donators:
+					self.donators.append(m.id)
+					if m.id not in dd:
+						await self.bot.db.execute("""INSERT INTO dnrr VALUES(%s)""", m.id)
+		else:
+			d=await self.bot.db.execute("""SELECT user_id FROM dnrr""", as_list=True)
+			for n in d:
+				if n not in self.donators:
+					self.donators.append(int(n))
+
+	async def initialize_settings_cache(self):
+		self.bot.logger.info("Caching settings...")
+		amentions=await self.bot.db.execute("SELECT guild_id,max FROM antimention")
+		aspam=await self.bot.db.execute("SELECT guild_id FROM antispam")
+		dnr=await self.bot.db.execute("""SELECT user_id FROM dnr""", as_list=True)
+		stfud=await self.bot.db.execute("""SELECT user_id,guild_id FROM stfu""")
+		prefixes = await self.bot.db.execute("SELECT user_id, prefix FROM guild_prefix")
+		wl=await self.bot.db.execute("""SELECT guild_id, user_id FROM whitelist""")
+		execs=await self.bot.db.execute("""SELECT guild_id FROM exempt""")
+		wlcmsgs=await self.bot.db.execute("""SELECT guild_id,message FROm wlcmsg""")
+		wlcchannels=await self.bot.db.execute("""SELECT guild_id,channel_id FROM welcome""")
+		anti=await self.bot.db.execute("""SELECT guild_id, ban, kick, role, channel, webhook, vanity FROM antinuke""")
+		punishments=await self.bot.db.execute("""SELECT guild_id, punishment FROM punishment""")
+		cfs=await self.bot.db.execute("""SELECT guild_id,strr from chatfilter""")
+		ars=await self.bot.db.execute("SELECT guild_id,command_trigger, content FROM custom_command")
+		reacs=await self.bot.db.execute("SELECT guild_id, trig, content FROM react")
+		ae=await self.bot.db.execute("""SELECT guild_id FROM autoembed""")
+		afks=await self.bot.db.execute("""SELECT user_id,reason,ts FROM afks""")
+		lfs = await self.bot.db.execute("SELECT user_id,lastfm_username FROM user_settings""")
+		lfme=await self.bot.db.execute("""SELECT user_id,message FROM last_fm_embed""")
+		keys=await self.bot.db.execute("""SELECT * FROM apikeys""")
+		alink=await self.bot.db.execute("""SELECT channel_id FROM antilink""")
+		bypass=await self.bot.db.execute("""SELECT guild_id,role_id FROM spambyp""")
+		imgonly=await self.bot.db.execute("""SELECT channel_id FROM imgonly""")
+		filters=await self.bot.db.execute("""SELECT * from filtersnipes""")
+		al=await self.bot.db.execute("""SELECT guild_id FROM adminlock""")
+		ndata=await self.bot.db.execute("""SELECT user_id FROM nodata""", as_list=True)
+		customcmds=await self.bot.db.execute("SELECT user_id,cc FROM cf")
+		lvlroles=await self.bot.db.execute("""SELECT guild_id,role_id,level FROM levelroles""")
+		aliasess=await self.bot.db.execute("""SELECT guild_id,alias,command FROM aliases""")
+		brs=await self.bot.db.execute("""SELECT guild_id,user_id,role_id FROM boostrole""")
+		ownrs=await self.bot.db.execute("""SELECT user_id FROM owners""")
+		abot=await self.bot.db.execute("""SELECT guild_id FROM antibot""")
+		spprt=await self.bot.db.execute("""SELECT user_id FROM support""")
+		oxus=await self.bot.db.execute("""SELECT id,uses FROM oxford""")
+		trigss=await self.bot.db.execute("""SELECT * FROM antiraidtrigger""")
+		ageee=await self.bot.db.execute("""SELECT guild_id, age FROM antiraid""")
+		avs=await self.bot.db.execute("""SELECT guild_id FROM antiraidav""")
+		pagers=await self.bot.db.execute("""SELECT * FROM paginator""")
+		gbans=await self.bot.db.execute("""SELECT user_id,admin FROM globalban""")
+		for guild_id,max in amentions:
+			self.antimention.update({int(guild_id):int(max)})
+		for guild_id in aspam:
+			self.antispam.append(int(str(guild_id[0])))
+		for user_id,admin in gbans:
+			self.globalban.append(int(str(user_id)))
+		for d in ndata:
+			if int(d) not in self.nodata:
+				self.nodata.append(int(d))
+		for d in dnr:
+			if int(d) not in self.donators:
+				self.donators.append(int(d))
+		for guild_id,trig,content,added_on in pagers:
+			gid=int(str(guild_id))
+			if gid not in self.paginator:
+				self.paginator[gid]={}
+			self.paginator[gid].update({trigger:content})
+		for guild_id in avs:
+			self.antiraid_av.append(int(str(guild_id[0])))
+		for guild_id,age in ageee:
+			gid=int(str(guild_id))
+			self.antiraid_age[gid]=int(str(age))
+		for guild_id,trigger in trigss:
+			gid=int(str(guild_id))
+			self.antiraid_trigger[gid]=int(str(trigger))
+		for id,uses in oxus:
+			if id == 0:
+				self.ox_usage[0]=int(str(uses))
+		for guild_id in abot:
+			gid=int(str(guild_id[0]))
+			self.antibot.append(gid)
+		for user_id in ownrs:
+			self.owners.append(int(str(user_id[0])))
+		for user_id in spprt:
+			self.support.append(int(str(user_id[0])))
+		for guild_id,user_id,role_id in brs:
+			if int(str(guild_id)) not in self.booster_roles:
+				self.booster_roles[int(str(guild_id))]={}
+			self.booster_roles[int(str(guild_id))].update({f'{int(str(user_id))}':f'{int(str(role_id))}'})
+		for guild_id,alias,command in aliasess:
+			if int(str(guild_id)) not in self.aliases:
+				self.aliases[int(str(guild_id))]={}
+			self.aliases[int(str(guild_id))].update({f'{str(alias)}':f'{str(command)}'})
+		for guild_id,role_id,level in lvlroles:
+			if int(str(guild_id)) not in self.level_roles:
+				self.level_roles[int(str(guild_id))]={}
+			self.level_roles[int(str(guild_id))].update({int(str(level)):int(str(role_id))})
+		for user_id,cc in customcmds:
+			self.lastfm_cc[int(str(user_id))]=str(cc)
+		for channel_id in alink:
+			self.antilink.append(int(str(channel_id[0])))
+		for guild_id,role_id in bypass:
+			if int(str(guild_id)) not in self.role_bypass:
+				self.role_bypass[int(str(guild_id))]=[]
+			self.role_bypass[int(str(guild_id))].append(int(str(role_id)))
+		for guild_id,user_id in stfud:
+			if int(str(guild_id)) not in self.stfu:
+				self.stfu[int(str(guild_id))]=[]
+			self.stfu[int(str(guild_id))].append(int(str(user_id)))
+		for guild_id in al:
+			self.adminlock.append(int(str(guild_id[0])))
+		for key in keys:
+			self.apikeys.append(str(key[0]))
+		for guild_id in execs:
+			self.exempt.append(int(str(guild_id[0])))
+		for guild_id in filters:
+			self.filter_snipes.append(int(guild_id[0]))
+		for channel_id in imgonly:
+			self.image_only.append(int(str(channel_id[0])))
+		for user_id,message in lfme:
+			self.lastfm_embeds[int(str(user_id))]=str(message)
+		for guild_id in ae:
+			self.autoembed.append(int(str(guild_id[0])))
+		for user_id,lastfm_username in lfs:
+			if lastfm_username != None:
+				self.lastfm[int(str(user_id))]=str(lastfm_username)
+
+		for guild_id,message in wlcmsgs:
+			self.welcomemessages[int(str(guild_id))]=message
+		for guild_id,channel_id in wlcchannels:
+			self.welcomechannels[int(str(guild_id))]=int(str(channel_id))
+		for guild_id,trig,content in reacs:
+			if str(guild_id) not in self.autoreacts:
+				self.autoreacts[str(guild_id)]={}
+			self.autoreacts[str(guild_id)][str(trig)]=str(content)
+		for guild_id,command_trigger,content in ars:
+			if str(guild_id) not in self.autoresponses:
+				self.autoresponses[str(guild_id)]={}
+			self.autoresponses[str(guild_id)][str(command_trigger)]=str(content)
+		for guild_id,strr in cfs:
+			if str(guild_id) not in self.chatfilter:
+				self.chatfilter[str(guild_id)]=[]
+			self.chatfilter[str(guild_id)].append(str(strr))
+		thresholds=await self.bot.db.execute("""SELECT guild_id, ban, kick, webhook, role, channel, vanity, asset FROM antinuke_thresholds""")
+		for guild_id,user_id in wl:
+			if str(guild_id) not in self.whitelist:
+				self.whitelist[str(guild_id)]=set()
+			self.whitelist[str(guild_id)].add(int(user_id))
+		for guild_id,ban,kick,webhook,role,channel,vanity,asset in thresholds:
+			self.threshold[str(guild_id)]={'ban':ban,'kick':kick,'webhook':webhook,'role':role,'channel':channel,'vanity':vanity,'asset':asset}
+		for guild_id,punishment in punishments:
+			self.punishment[str(guild_id)]=int(punishment)
+		for user_id,reason,ts in afks:
+			self.afk[int(str(user_id))]={'reason':reason,'ts':ts}
+		for guild_id,ban,kick,role,channel,webhook,vanity in anti:
+			self.antinuke[str(guild_id)]={"ban":ban,"kick":kick,"channel":channel,"role":role,"webhook":webhook,"vanity":vanity}
+		for user_id, prefix in prefixes:
+			self.prefixes[str(user_id)] = prefix
+		prefixess = await self.bot.db.execute("SELECT guild_id, prefix FROM guild_prefixx")
+		for guild_id, prefix in prefixess:
+			self.prefixess[str(guild_id)] = prefix
+		guild_settings = await self.bot.db.execute(
+			"SELECT guild_id, googlesafe, levelup_messages FROM guild_settings"
+		)
+		for guild_id, googlesafe, levelup_messages in guild_settings:
+			self.googlesafe[str(guild_id)] = googlesafe
+			self.levelupmessage[str(guild_id)] = levelup_messages
+		try:
+			delete=await self.bot.db.execute("""SELECT guild_id FROM delete""")
+			if delete:
+				for guild_id in delete:
+					self.delete.append(guild_id)
+		except:
+			pass
+
+		self.blacklist = {
+			"global": {
+				"user": set(
+					await self.bot.db.execute("SELECT user_id FROM blacklisted_user", as_list=True)
+				),
+				"guild": set(
+					await self.bot.db.execute(
+						"SELECT guild_id FROM blacklisted_guild", as_list=True
+					)
+				),
+				"channel": set(
+					await self.bot.db.execute(
+						"SELECT channel_id FROM blacklisted_channel", as_list=True
+					)
+				),
+			}
+		}
+
+		self.marriages = [
+			set(pair)
+			for pair in await self.bot.db.execute(
+				"SELECT first_user_id, second_user_id FROM marriage"
+			)
+		]
+
+		for guild_id, user_id in await self.bot.db.execute(
+			"SELECT guild_id, user_id FROM blacklisted_member"
+		):
+			try:
+				self.blacklist[str(guild_id)]["member"].add(user_id)
+			except KeyError:
+				self.blacklist[str(guild_id)] = {"member": {user_id}, "command": set()}
+
+		for guild_id, command_name in await self.bot.db.execute(
+			"SELECT guild_id, command_name FROM blacklisted_command"
+		):
+			try:
+				self.blacklist[str(guild_id)]["command"].add(command_name.lower())
+			except KeyError:
+				self.blacklist[str(guild_id)] = {
+					"member": set(),
+					"command": {command_name.lower()},
+				}
+
+		await self.cache_starboard_settings()
+		await self.cache_logging_settings()
+		await self.cache_autoroles()
+		await self.cache_donators()

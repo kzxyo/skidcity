@@ -1,0 +1,13 @@
+jishaku
+humanfriendly
+asyncpg
+git+https://github.com/cop-discord/rivalapi.git
+deep_translator
+timezonefinder
+geopy
+humanize
+arrow
+aiogtts
+uwuipy
+colorama
+emoji

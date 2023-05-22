@@ -1,0 +1,16 @@
+jishaku
+psutil
+discord
+pymongo[srv]
+dnspython
+datetime
+pymongo
+requests
+aiohttp
+aiosqlite
+button-paginator @ git+https://github.com/antinuke0day/button_paginator.git@50d1f695a8cdcf8be37b04ec158ab51c477dab35
+ui
+activity
+tasks
+utils
+discord.py

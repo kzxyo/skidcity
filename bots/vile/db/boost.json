@@ -1,0 +1,31 @@
+{
+    "936316939322654840": {
+        "channel": [
+            1022535209377333248
+        ],
+        "message": "{content:{user.mention}}{embed}$v{description: ty for boosting}$v{color:2f3136}"
+    },
+    "1031650118375571537": {
+        "channel": [
+            1031654056034324561,
+            1031658821535400038,
+            1031653205781790780,
+            1046060690005299240
+        ],
+        "message": "{content: \u2728 {user.mention}}"
+    },
+    "1028806454548889692": {
+        "channel": [
+            1038208258147614740
+        ],
+        "message": "<:boost:1032053224481492992> {user} thanks for boosting arctic\n\n<:vlone_blue:1039423351044710410> check out <#1039423876708442132>\n\ndm <@1004142441240199298> to claim your <#1038208067197734983>"
+    },
+    "997954471265054802": {
+        "channel": [],
+        "message": "{content:going against mod{user.mention}ty}"
+    },
+    "1036257033369964544": {
+        "channel": [],
+        "message": "ty for boosting"
+    }
+}

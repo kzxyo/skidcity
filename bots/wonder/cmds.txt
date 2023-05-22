@@ -1,0 +1,140 @@
+autoreact — N/A
+clear — N/A
+add — N/A
+show — N/A
+delete — N/A
+ascii — Turns text into ASCII
+reverse — Reverses text
+setprefix — Sets a custom prefix for the guild
+starboard — N/A
+reactions — N/A
+channel — N/A
+base64 — N/A
+roleinfo — Shows information on a role
+github — Shows information on a Github user
+clownboard — N/A
+reactions — N/A
+channel — N/A
+reminder — Schedules a reminder to help you remind something
+aninews — Shows the latest anime news
+welcome — N/A
+test — N/A
+channel — N/A
+message — N/A
+disable — N/A
+serverbanner — Displays the server's banner
+botinfo — Shows some information about the bot
+voicemaster — config
+goodbye — N/A
+message — N/A
+disable — N/A
+channel — N/A
+clearavatars — N/A
+weheartit — N/A
+avatar — Displays a user's avatar
+banner — N/A
+image — N/A
+pastavatars — N/A
+boostmessage — N/A
+message — N/A
+disable — N/A
+test — N/A
+channel — N/A
+boosterlist — N/A
+enlarge — Enlarges an emoji
+help — N/A
+afk — N/A
+pp — N/A
+servericon — Displays the server's icon
+lastfm — N/A
+topartists — lastfm
+globalwhoknows — lastfm
+set — lastfm
+toptracks — lastfm
+customcommand — N/A
+embed — N/A
+remove — lastfm
+whoknows — lastfm
+topalbums — lastfm
+invite — sends the bot's invite link
+spotify — Shows the Spotify song a user is listening to
+anime — Shows information on an anime
+roleperms — Shows a list of a role's perms
+ping — Shows the bot's latency
+si — Shows information on the guild
+membercount — N/A
+Emojis — Shows all emojis in a guild
+forcenickname — N/A
+add — N/A
+delete — N/A
+show — N/A
+clear — N/A
+changenickname — N/A
+ban — Bans a user from the guild
+donate — Shows payment methods to donate
+purge — N/A
+rolelist — N/A
+botpurge — N/A
+inrole — N/A
+whois — Shows information on a user
+slowmode — N/A
+unban — unbans a member from the guild
+serveravatar — Displays a user's avatar
+kick — kicks a member from the guild
+addrole — N/A
+permissions — Shows a list of a user's guild permissions
+snipe — utility
+chatfilter — N/A
+add — N/A
+clear — N/A
+show — N/A
+fancify — Turns text into a fancy font
+christmas — Shows how many days are left until Christmas
+autoresponder — N/A
+clear — N/A
+add — N/A
+show — N/A
+delete — N/A
+hastebin — Posts text to hastebin
+urban — Searches the urban dictionary for the definition of a word
+cuterate — N/A
+addemoji — Adds an emoji
+question — N/A
+imageonly — N/A
+clear — N/A
+add — N/A
+show — N/A
+wordcloud — N/A
+kiss — N/A
+punch — N/A
+clearnames — N/A
+gayrate — shows how gay you are
+coolrate — N/A
+lick — N/A
+fuck — N/A
+hug — N/A
+channellist — N/A
+bite — N/A
+pat — N/A
+bitches — N/A
+google — N/A
+horny — N/A
+autorole — N/A
+delete — N/A
+clear — N/A
+add — N/A
+show — N/A
+tickle — N/A
+character — Shows a picture of an anime character
+cry — N/A
+fatrate — N/A
+iq — N/A
+deleteemoji — Deletes an emoji
+emojify — N/A
+coinflip — N/A
+sus — N/A
+pastusernames — N/A
+covid — Shows COVID-19 statistics for a country
+embed — N/A
+nowplaying — lastfm
+gif — Search for a GIF on Giphy
