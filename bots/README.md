@@ -3,5 +3,5 @@
 
 [ Discord bots that has been leaked, some are unknown asf but this is recently updated. ]
 
-[ This is solely used for educational purposes and my enjoyment ]
+[ THIS IS NOT ONLY MY LEAKS, most of them are leaked by lanyard#0001 (lost#1639) im just updating this with my leaks ]
 ```
