@@ -1,6 +1,3 @@
-# fye website
-
-Website skidded by apollo#1337.
-This is old pretend website btw.
-
-**Leaked by me ofc (meant#0001)**
+# FYE WEBSITE
+A Discord bot website made by **sent** but skidded by **apollo**
+> Leaked by (`pretend#9199`) and vlaz (`lost his tag`)
