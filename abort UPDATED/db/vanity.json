@@ -1,0 +1,32 @@
+{
+    "1106564925280768133": {
+        "role": 1106885056791842896,
+        "channel": 1107085525074055288,
+        "message": "sexy",
+        "vanity": "ethot"
+    },
+    "1046582842827735061": {
+        "role": 1109205248775565413,
+        "channel": 1046585083143929936,
+        "message": "thx for repping!",
+        "vanity": null
+    },
+    "1109510976266575972": {
+        "role": null,
+        "channel": 1109539103139188877,
+        "message": "thx for repping gangy {user.mention}",
+        "vanity": "nuker"
+    },
+    "1110287100814827542": {
+        "role": null,
+        "channel": 1110580514877866115,
+        "message": "thx for repping /abort",
+        "vanity": "abort"
+    },
+    "935973596512284782": {
+        "role": 1107919036441968640,
+        "channel": null,
+        "message": null,
+        "vanity": "htc"
+    }
+}
