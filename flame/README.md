@@ -1,3 +1,3 @@
 # FLAME
-A Discord bot made by **hru**
+A Discord bot made by **donathan**
 > Leaked by myself 😁
