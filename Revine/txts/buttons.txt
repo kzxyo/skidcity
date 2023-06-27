@@ -1,0 +1,18 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        button = Button(label="Icon", url=f"{ctx.guild.icon.url}", emoji=f"{Emotes.link_emote}")
+        view = View()
+        view.add_item(button)

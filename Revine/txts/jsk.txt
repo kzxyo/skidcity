@@ -1,0 +1,33 @@
+Reload Commands:
+
+;jsk reload cogs.info
+;jsk reload cogs.mod
+;jsk reload cogs.images
+;jsk reload cogs.emote
+;jsk reload cogs.misc
+;jsk reload cogs.spotify
+;jsk reload cogs.nsfw
+;jsk reload cogs.listeners
+;jsk reload cogs.help
+;jsk reload cogs.fun
+;jsk reload cogs.lastfm
+
+View file's code:
+
+;jsk cat cogs/info.py
+;jsk cat cogs/mod.py
+;jsk cat cogs/images.py
+;jsk cat cogs/misc.py
+;jsk cat cogs/help.py
+;jsk cat cogs/fun.py
+;jsk cat cogs/emote.py
+;jsk cat cogs/lastfm.py
+;jsk cat cogs/listeners.py
+;jsk cat cogs/nsfw.py
+;jsk cat cogs/spotify.py
+;jsk cat classes.py
+;jsk cat revine.py
+
+
+
+activity=discord.Activity(type=discord.ActivityType.competing, name="discord.gg/revine"))
