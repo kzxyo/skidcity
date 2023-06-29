@@ -1,4 +1,5 @@
-# wock
-### Horrid looking Discord bot made by @rxistaken <br>
-> Credits: caden (me, @shyningonwesternave on Discord) <br>
+> # WOCK
+A Discord bot made by **@rxwastaken**
+> Credits: caden (`@shyningonwesternave`)
 https://gitlab.com/wockbot/wock
+
