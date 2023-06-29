@@ -1,0 +1,96 @@
+{
+    "token": "MTAwNDg1OTA0NDk3NDAzOTIxMQ.GscFQc.6Q9Xqqax7nrq_bLlILU4gUqLSls5qLWfRwqhAk",
+    "wock_id": 1004859044974039211,
+    "music_tokens": [
+        "MTA2MzYzOTQxNDA0MDk2OTIxNw.GCA8Cp.hsrdHo8x0Bl5dc9PjxQUU5glga0cW__2dv-Jvo",
+        "MTA2MzYzOTgwMjYyNjQ1MzYxMA.GHLVhu.H9NS2tRPkAhcHv6FmIx4YR9cy9zLPfk5_40fpY",
+        "MTA2MzY0MDAzNTU5OTA2NTE2OA.GF8lcx.CZazfTLyHCukpjJWbfSWlu7lczpUvlSF7bVRJ0",
+        "MTA2MzY2ODc2ODk3MjIxNDI5Mw.GZoaRu.n6lHREX8wYnMmtSaNvkz-2ZqjbvrR0Q8ZDV2K4"
+    ],
+    "owners": [
+        1004836998151950358,
+        906014888776859668
+    ],
+    "prefix": ",",
+    "styles": {
+        "main": {
+            "color": "#2B2D31"
+        },
+        "approve": {
+            "color": "#a9e97a",
+            "emoji": "<:tick:1090813900146102323>"
+        },
+        "warn": {
+            "color": "#FFCC00",
+            "emoji": "<:warn:1058629020926885898>"
+        },
+        "load": {
+            "color": "#2B2D31",
+            "emoji": "⚙️"
+        },  
+        "paginator": {
+            "previous": "<:wock_page_left:1042248315200356372>",
+            "next": "<:wock_page_right:1042248301162004541>",
+            "skip": "<:wock_page_skip:1042248272988868689>",
+            "stop": "<:wock_page_close:1042248293079580758>"
+        },
+        "lighter": {
+            "emoji": "<:lighter:1081713023862964364>"
+        }
+    },
+    "channels": {
+        "avatars": 1004890466556326009
+    },
+    "domain": "wock.cloud",
+    "secret": "vKuumbHzSwtXciBq4XuXLIE2YqOhB7CImr",
+    "database": {
+        "user": "rx",
+        "password": "XUGfBvFEWu2Yu8Ky",
+        "database": "wock"
+    },
+    "lavalink": {
+        "host": "127.0.0.1",
+        "port": 2333,
+        "password": "bk3ISkZTwQQoJdh1",
+        "secure": false
+    },
+    "api": {
+        "wock": "ea71fef8e74f0ddfcb3a8e0a5b88e19e",
+        "lastfm": [
+            "66447a1b5e91d9b464ca0364b17e3f1e",
+            "9c0dc0927da8414214f307a617a292b0",
+            "6a28803bd3a18a21322aa0480fdb0691",
+            "f40083806bcd9797d384d55b0dd2e238",
+            "c38912b632c375272d689b0a0a6e04f7"
+        ],
+        "google": [
+            "AIzaSyCvXhDmYnNrNIV-LvDl9AEI_XNNZvzNVE0",
+            "AIzaSyA1sdi3J7hw_SWEhNgvWQfz1azU5UH-gzY",
+            "AIzaSyBiENusmrFqcIMQgr3-yLesFOFvUSyxs2U",
+            "AIzaSyA6SPM5RcCHCpdrJy1HefsKcsvDRnPtR68",
+            "AIzaSyAY1FncVemBJLJba-PWC9u8rObiSBM0jBw",
+            "AIzaSyDtYQy6lK32AVFlAUlwLo_3LSuCaHs7bV4",
+            "AIzaSyAYuCaf8sOrYS2d0EN8tkLt-lREJkOtf6c",
+            "AIzaSyCmCJSW2V6lAI2UwImRwGHAiKVlyDgbjEk",
+            "AIzaSyB6COsG3fDBb2VP9iLSa2TwtlUtbTE-Jkw",
+            "AIzaSyDczYNouoGpP1or_3CdZajmgCoWUgKUM28",
+            "AIzaSyAejxYs3rw1Cv-od8-iZ1IHxpSqPAmlShg",
+            "AIzaSyANiEh_95N5RJSHx3UYWV6qnZyo9MY9yC8"
+        ],
+        "gcloud": "AIzaSyDyFsOZLpCcEQC-B2pNSj41MC-_419Ht1U",
+        "tiktok": "3797e14bf07c613de9b8b3663a6f2861",
+        "instagram": "ma.ison1502",
+        "fortnite": "eb1db4b1-5f1e-4ec1-ba7c-802c3a69bfa1",
+        "weather": "0c5b47ed5774413c90b155456223004",
+        "yodabot": "YW-rRURpkAft_uc_b45Qi_0dRQcu0P6uj46DF7TsoiA4_3cfhPVoMMfJwqzE6cXhgjQ",
+        "genius": "eqyTAyhrgelRaCor-dwZpJjyVrDphxQIMo6M4bkFp3TJJy14S_YOt9EpJlvf0t5G",
+        "soundcloud": "OAuth 2-292593-994587358-Af8VbLnc6zIplJ",
+        "openai": "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",
+        "hypixel": "fe952d1d-6a86-4464-8a30-cd532d49adc9",
+        "henrik": "HDEV-35f056ec-468d-4079-b2bd-7c3ad7d69c13",
+        "spotify": {
+            "client_id": "2316ad50dfc0422284228a3c7d14bbaf",
+            "client_secret": "b27e2ee30eee4afb82f0c4f53f2a2530"
+        }
+    }
+}

@@ -1,0 +1,68 @@
+# Hi Teen.
+# -> This is a list of all the dependencies for the bot.
+# --> Since you can't actually SSH into the server, you'll have to use the jishaku sh command.
+# ---> !jsk sh source .venv/bin/activate && pip install (dependency)
+# ----> Example: !jsk sh source .venv/bin/activate && pip install humanize
+
+
+git+https://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@github.com/rxnk/discord.py
+git+https://github.com/cloudwithax/pomice
+git+https://github.com/kkroening/ffmpeg-python
+# git+https://github.com/nathanielfernandes/imagetext-py
+jishaku
+asyncpg
+redis
+pytz
+loguru
+psutil
+xxhash
+humanize
+dateparser
+beautifulsoup4
+asyncspotify
+legofy
+rembg
+maturin
+imagehash
+cashews
+pydantic
+dask[complete]
+wordcloud
+plotly
+kaleido
+websockets
+
+# Install songrec for shazam..
+# wget -qO- 'http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x6888550b2fc77d09' | sudo tee /etc/apt/trusted.gpg.d/songrec.asc
+# sudo apt-add-repository ppa:marin-m/songrec -y -u
+# sudo apt install songrec -y
+
+# Install rust for uwu..
+# curl https://sh.rustup.rs -sSf | sh
+# cargo install uwuify
+# git clone https://github.com/rxnk/uwupy && cd uwupy
+# maturin develop && cd ..
+
+# web server
+# You need to install cloudflared for it to actually communicate..
+# Subdomains
+# *      - 	http://0.0.0.0:3217
+# blob   - 	http://0.0.0.0:3217
+# dev    - 	http://0.0.0.0:3217
+# fm    - 	http://0.0.0.0:3217
+# webhook - http://0.0.0.0:3217
+
+git+https://github.com/MiroslavRosenov/better-ipc@aded5339d26c4140442d3d55f39bf9285b7aa291
+markupsafe
+aiofiles
+hypercorn
+werkzeug
+jinja2
+blinker
+itsdangerous
+openai
+tiktoken
+xmltodict
+instaloader # In order for the Instagram features to work - You must setup your session in /tmp/.instaloader-usr/session-USERNAME
+pytube
+markdownify

@@ -1,0 +1,32 @@
+<!-- Fuck Off. -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{{ data['user']['name'] }}'s avatars</title>
+        <link rel="icon" href="{{ data['user']['avatar'] }}">
+    </head> 
+    <style>
+body {
+    background-color: rgb(24 24 27 / 1);
+}
+
+main {
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+img {
+    width: 100%;
+    overflow: clip;
+}
+    </style>
+    <body>
+        <main>
+            {% for avatar in data['avatars'] %}
+                <img src={{avatar}}>
+            {% endfor %}
+        </main>
+    </body>
+</html>

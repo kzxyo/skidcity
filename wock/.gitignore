@@ -1,0 +1,6 @@
+# Environments 
+.venv
+.vscode
+
+# Website
+.node_modules
