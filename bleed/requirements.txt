@@ -1,0 +1,13 @@
+git+https://github.com/rxnk/discord.py
+jishaku
+asyncpg
+cashews
+psutil
+pomice
+pydantic
+humanize
+pillow
+dateparser
+python-dateutil
+beautifulsoup4
+asyncspotify
