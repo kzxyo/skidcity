@@ -1,0 +1,19 @@
+{
+    "done": "<:miroapprove:1117144152363245638>",
+    "fail": "<:mirodeny:1117144156507209829>",
+    "warn": "<:mirow:1117144157992009728>",
+    "dev": "<:developer:1107720972112502794>",
+    "bot": "<:miro_automod:1107721317375033384>",
+    "hunterplus": "<:goldbughunter:1107721498715770900>",
+    "hunter": "<:bughunter:1107721481313595492>",
+    "reply": "<:miroreply:1107719722394456065>",
+    "dash": "<:c_dashblue:1107721692568096768>",
+    "dot": "<:p_dot:1107721754174050365>",
+    "firstpage": "<a:left:1107722318865768509>",
+    "prevpage": "<:left:1107307769582850079>",
+    "nextpage": "<:right:1107307767041105920>",
+    "lastpage": "<:right:1107722266067877938>",
+    "choosepage": "<:filter:1113850464832868433>",
+    "afk": "<a:AFpepebye:1107722735578263592>",
+    "loading": "<a:loading:1107722797939167274>"
+}
