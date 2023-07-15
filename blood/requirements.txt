@@ -1,0 +1,4 @@
+jishaku
+discord
+aiosqlite
+aiohttp
