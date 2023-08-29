@@ -1,0 +1,17 @@
+jishaku
+humanfriendly
+asyncpg
+git+https://github.com/cop-discord/rivalapi.git
+deep_translator
+timezonefinder
+geopy
+humanize
+arrow
+aiogtts
+uwuipy
+colorama
+emoji
+google-api-core
+google-auth
+google-cloud-dialogflow
+googleapis-common-protos
