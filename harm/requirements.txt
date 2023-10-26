@@ -1,0 +1,5 @@
+discord.py
+jishaku
+asyncpg
+humanize
+python-dotenv
