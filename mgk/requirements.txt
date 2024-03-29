@@ -1,0 +1,14 @@
+discord
+jishaku
+python-dotenv
+datetime
+typing
+psutil
+humanize
+pytube
+humanfriendly
+pymysql
+langdetect
+translate
+python-youtube
+youtube_dl

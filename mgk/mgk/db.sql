@@ -1,0 +1,16 @@
+CREATE TABLE prefix (
+    guild BIGINT(255) NOT NULL,
+    prefix CHAR(8) NOT NULL
+) ENGINE = InnoDB;
+CREATE TABLE selfprefix (
+    user BIGINT(255) NOT NULL,
+    prefix CHAR(8) NOT NULL
+) ENGINE =  InnoDB;
+CREATE TABLE muterole (
+    role BIGINT(255) NOT NULL,
+    guild BIGINT(255) NOT NULL
+) ENGINE = InnoDB;
+CREATE TABLE promo (
+    guild BIGINT(255) NOT NULL,
+    msg BIGINT(255) NOT NULL
+) ENGINE = InnoDB;
