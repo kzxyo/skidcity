@@ -1,0 +1,21 @@
+{
+    "prefix": "/",
+    "developers": ["YOUR DISCORD ID PLS"],
+    "lastfmkey": "02c1cf78a77ec37e8d271b0c9d440ac1",
+    "color": "#747c8c",
+    "server": "https://discord.gg/okay",
+    "token": "TOKEN HERE",
+    "mark": "<:mark:1223412191521280051>",
+    "warn": "#FFCC00",
+    "green": "#a9e97a",
+    "footer": "https://media.discordapp.net/attachments/1124705002276012103/1188907210256961596/1182779817574289448.gif?ex=65e60f1f&amp",
+    "grant": "<:grant:1223412164916809849>",
+    "invite": "https://discord.com/api/oauth2/authorize?client_id=1110011733382287411&permissions=8&scope=bot",
+    "next" : "<:next:1126196000579665951>",
+    "previous": "<:left:1127669838089834677>",
+    "skip": "<:navigate:1126195978622480436>",
+    "cancel": "<:cancel:1126195945864957982> ",
+    "genius": "t6t_zGWY7lMe3poWLAPaRW5YoV48Jb-vXIEI3G7_PrqhJUj9g06x9MnmFeN2Wu_a",
+    "rival": "79dd5003-c9f0-4eac-bda0-199d6483939e",
+    "gemini": "AIzaSyALxTacFT2vbMHegUNWEJWgJ599pOyrYo8"
+}
