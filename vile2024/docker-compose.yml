@@ -1,0 +1,11 @@
+version: '3'
+services:
+  bot:
+    build: .
+    container_name: oldbot
+    network_mode: host
+    volumes:
+      - ./:/app
+      - /root/.cache:/root/.cache
+      - /root/.config:/root/.config
+      - /root/.mamba/envs/treyten/lib/python3.11/site-packages:/usr/local/lib/python3.11/site-packages
