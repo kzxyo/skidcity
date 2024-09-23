@@ -1,0 +1,7 @@
+.env
+*.pyc
+*.log
+*.json
+*.jar
+*.gz
+node_modules/
