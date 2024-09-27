@@ -1,3 +1,3 @@
 # BLOOD
 A Discord bot skidded by **marian**
-> leaked by me (`aiosqlite`)
+> leaked by me (`2ummrs`)
