@@ -1,2 +1,2 @@
 # pluto
-open source code made by **packrunnerkankan**
+discord bot made by me **@kzxyo**
