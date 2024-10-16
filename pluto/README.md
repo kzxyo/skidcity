@@ -1,2 +1,3 @@
-# pluto
-discord bot made by me **@kzxyo**
+# PLUTO
+A Discord bot made by **adrian** (`@kzxyo`)
+> leaked by (`@kzxyo`)
