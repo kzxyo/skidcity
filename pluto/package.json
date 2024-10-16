@@ -1,0 +1,31 @@
+{
+  "name": "haunt-2022",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "app-store-scraper": "^0.18.0",
+    "axios": "^0.27.2",
+    "comma-number": "^2.1.0",
+    "common-tags": "^1.8.2",
+    "discord-jokes": "^4.0.0",
+    "discord.js": "13.8",
+    "glob": "^8.0.3",
+    "got": "^14.4.2",
+    "js-base64": "^3.7.2",
+    "moment": "^2.29.4",
+    "mongoose": "^6.6.0",
+    "node-fetch": "^2.6.7",
+    "relevant-urban": "^2.0.0",
+    "request-promise": "^4.2.6",
+    "superagent": "^8.0.0",
+    "translate-google": "^1.5.0",
+    "urban": "^0.3.4",
+    "yt-search": "^2.10.3"
+  }
+}
