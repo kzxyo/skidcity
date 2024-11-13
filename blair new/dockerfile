@@ -1,0 +1,6 @@
+FROM python:3.12.4-slim
+WORKDIR /
+
+COPY . .
+RUN chmod +x run.sh
+ENTRYPOINT [ "./run.sh" ]
